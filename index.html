@@ -74,6 +74,7 @@
         <div class="image-container">
             <img src="assets/images/common/pigeon.jpg" alt="描述图片内容">
         </div>
+        <div id="json-content"></div>
     </div>
         <div class="floating-text" id="floatingText">我不建了，真不建了</div>
         <script>
@@ -83,6 +84,33 @@
         let velocityX = 2; // 水平速度
         let velocityY = 2; // 垂直速度
 
+                    // 页面加载完成后执行
+        window.onload = function() {
+            // 1. 使用fetch请求JSON文件
+            fetch('assets/jsonfile/mainStory.json')
+                .then(response => {
+                    // 检查请求是否成功
+                    if (!response.ok) {
+                        throw new Error('网络请求失败，状态码：' + response.status);
+                    }
+                    return response.json(); // 解析JSON数据
+                })
+                .then(data => {
+                    // 2. 获取显示内容的容器
+                    const container = document.getElementById('json-content');
+                    
+                    // 3. 将JSON数据转换为可读字符串（或自定义展示逻辑）
+                    container.innerHTML = JSON.stringify(data, null, 2); // 美化输出
+                    
+                    // 可选：如果你知道JSON结构，可以更友好地展示内容
+                    // 例如：container.innerHTML = data.title + ": " + data.description;
+                })
+                .catch(error => {
+                    console.error('加载JSON时出错:', error);
+                    document.getElementById('json-content').innerHTML = "加载故事失败，请检查控制台。";
+                });
+        };
+            
         function updatePosition() {
             posX += velocityX;
             posY += velocityY;
